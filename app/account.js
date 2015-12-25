@@ -6,13 +6,13 @@ class Tx {
         return passedDays;
     }
     getBalance(now) {
-        return this.amount*Math.pow(1.3, this.passedDays(now));
+        return this.amount*Math.pow(1.03, this.passedDays(now));
     }
 }
 class HelpingTx {
-    constructor(address, btcTx) {
+    constructor(address, toAddress, btcTx) {
         var outs = lodash.filter(btcTx.vout, function(out) {
-            return lodash.get(out,'scriptPubKey.addresses').indexOf(address)>=0;
+            return lodash.get(out,'scriptPubKey.addresses').indexOf(toAddress)>=0;
         });
         this.amount = lodash.reduce(outs, function(s, out) {
             return s+Number(out.value);
@@ -23,13 +23,7 @@ class HelpingTx {
 
 class WithdrawTx {
     constructor(address, btcTx) {
-        var ins = lodash.filter(btcTx.vin, {addr:address});
-        if (ins.length<=0) return;
-
-        this.amount = lodash.reduce(ins, function(s, txIn) {
-            return s+Number(txIn.value);
-        }, 0);;
-        this.time = btcTx.blocktime*1000;
+        HelpingTx.apply(this, [address, address, btcTx]);
     }
 }
 
@@ -45,8 +39,9 @@ export class Account {
         this.withdrawTxs = [];
         this.balance = 0;
     }
-    addBtcTx(btcTx) {
-        var tx = new HelpingTx(this.address, btcTx);
+    addBtcTx(btcTx, toAddress) {
+        if (Account.getSender(btcTx)!=this.address) return;
+        var tx = new HelpingTx(this.address, toAddress, btcTx);
         if (tx.amount<=0) return;
         this.addTxs.push(tx);
     }

@@ -31,7 +31,7 @@ export class AppComponent {
                     if (!account) {
                         account = accounts[sender] = new Account(sender);
                     }
-                    account.addBtcTx(tx);
+                    account.addBtcTx(tx, 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r');
                 })
                 self.accounts = lodash.values(accounts);
             });

@@ -6,7 +6,7 @@ describe('account', function () {
     var tx = txs.txs[0];
     var account;
     beforeEach(function() {
-        account = new Account('mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r');
+        account = new Account('mtGeH3jqZ6Pqec5mCkDV5id3qL4cxqVEnY');
         jasmine.clock().install();
     });
     afterEach(function() {
@@ -14,7 +14,7 @@ describe('account', function () {
     });
 
     it('creates tx from btc tx', function(done) {
-        var accountTx = account.addBtcTx(tx);
+        var accountTx = account.addBtcTx(tx, 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r');
         // jasmine.clock().mockDate(new Date(1450919586*1000));
         expect(account.getBalance(new Date(1450919586*1000))).toBe(0.3);
         done();
@@ -29,30 +29,30 @@ describe('account', function () {
     });
 
     it('accumulate interest', function(done) {
-        var accountTx = account.addBtcTx(tx);
+        var accountTx = account.addBtcTx(tx, 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r');
         // jasmine.clock().mockDate(new Date(1450919586*1000+24*60*60*1000));
-        expect(account.getBalance(new Date(1450919586*1000+24*60*60*1000))).toBe(0.3*1.3);
+        expect(account.getBalance(new Date(1450919586*1000+24*60*60*1000))).toBe(0.3*1.03);
         done();
     });
     it('withdraw', function(done) {
-        var accountTx = account.addBtcTx(tx);
+        var accountTx = account.addBtcTx(tx, 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r');
         jasmine.clock().mockDate(new Date(1450919586*1000+24*60*60*1000));
         var withdrawTx = lodash.cloneDeep(tx);
-        withdrawTx.vin[0].addr = 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r';
-        withdrawTx.vin[0].value = 0.3;
+        withdrawTx.vout[1].scriptPubKey.addresses[0] = 'mtGeH3jqZ6Pqec5mCkDV5id3qL4cxqVEnY';
+        withdrawTx.vout[1].value = 0.3;
         withdrawTx.blocktime = 1450919586+24*60*60;
         account.withdraw(withdrawTx);
-        expect(account.getBalance(1450919586*1000+24*60*60*1000).toFixed(8)).toBe((0.3*0.3).toFixed(8));
+        expect(account.getBalance(1450919586*1000+24*60*60*1000).toFixed(8)).toBe((0.3*0.03).toFixed(8));
         done();
     });
     it('accumulate after withdraw', function(done) {
-        var accountTx = account.addBtcTx(tx);
+        var accountTx = account.addBtcTx(tx, 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r');
         var withdrawTx = lodash.cloneDeep(tx);
-        withdrawTx.vin[0].addr = 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r';
-        withdrawTx.vin[0].value = 0.3;
+        withdrawTx.vout[1].scriptPubKey.addresses[0] = 'mtGeH3jqZ6Pqec5mCkDV5id3qL4cxqVEnY';
+        withdrawTx.vout[1].value = 0.3;
         withdrawTx.blocktime = 1450919586+24*60*60;
         account.withdraw(withdrawTx);
-        expect(account.getBalance(1450919586*1000+2*24*60*60*1000).toFixed(8)).toBe((0.3*0.3*1.3).toFixed(8));
+        expect(account.getBalance(1450919586*1000+2*24*60*60*1000).toFixed(8)).toBe((0.3*0.03*1.03).toFixed(8));
         done();
     });
 
