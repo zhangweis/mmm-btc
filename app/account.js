@@ -11,7 +11,6 @@ class Tx {
 }
 class HelpingTx {
     constructor(address, btcTx) {
-        // this.btcTx = btcTx;
         var outs = lodash.filter(btcTx.vout, function(out) {
             return lodash.get(out,'scriptPubKey.addresses').indexOf(address)>=0;
         });
@@ -24,7 +23,6 @@ class HelpingTx {
 
 class WithdrawTx {
     constructor(address, btcTx) {
-        // this.btcTx = btcTx;
         var ins = lodash.filter(btcTx.vin, {addr:address});
         if (ins.length<=0) return;
 
@@ -47,13 +45,15 @@ export class Account {
         this.withdrawTxs = [];
         this.balance = 0;
     }
-    addBtcTx(tx) {
-        var self = this;
-        this.addTxs.push(new HelpingTx(this.address, tx));
+    addBtcTx(btcTx) {
+        var tx = new HelpingTx(this.address, btcTx);
+        if (tx.amount<=0) return;
+        this.addTxs.push(tx);
     }
-    withdraw(tx) {
-        var self = this;
-        this.withdrawTxs.push(new WithdrawTx(this.address, tx));
+    withdraw(btcTx) {
+        var tx = new WithdrawTx(this.address, btcTx);
+        if (tx.amount<=0) return;
+        this.withdrawTxs.push(tx);
     }
     getBalance(now) {
         var helping = lodash.reduce(this.addTxs, function(total, tx) {
@@ -64,4 +64,10 @@ export class Account {
         }, 0);
         return helping - requested;
     }
+}
+Account.getSender = function (btcTx) {
+    return btcTx.vin[0].addr;
+}
+Account.getReceiver = function (btcTx) {
+    return lodash.get(btcTx.vout[0], 'scriptPubKey.addresses[0]');
 }
