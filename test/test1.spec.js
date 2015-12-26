@@ -20,17 +20,23 @@ describe('account', function () {
         done();
     });
     it('extract address', function(done) {
-        // jasmine.clock().mockDate(new Date(1450919586*1000+24*60*60*1000));
         var account = Account.getSender(tx);
         expect(account).toBe('mtGeH3jqZ6Pqec5mCkDV5id3qL4cxqVEnY');
         account = Account.getReceiver(tx);
         expect(account).toBe('miGQqy9zPmAH27FL86areeqvUahsxprGg1');
         done();
     });
+    it('tx memo can specify account address', function(done) {
+        tx.memo = 'miGQqy9zPmAH27FL86areeqvUahsxprGg1';
+        expect(Account.getSender(tx)).toBe('miGQqy9zPmAH27FL86areeqvUahsxprGg1');
+        tx.memo = 'mtGeH3jqZ6Pqec5mCkDV5id3qL4cxqVEnY';
+        account = Account.getReceiver(tx);
+        expect(account).toBe('mtGeH3jqZ6Pqec5mCkDV5id3qL4cxqVEnY');
+        done();
+    });
 
     it('accumulate interest', function(done) {
         var accountTx = account.addBtcTx(tx, 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r');
-        // jasmine.clock().mockDate(new Date(1450919586*1000+24*60*60*1000));
         expect(account.getBalance(new Date(1450919586*1000+24*60*60*1000))).toBe(0.3*1.03);
         done();
     });
