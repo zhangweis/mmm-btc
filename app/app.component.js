@@ -1,18 +1,11 @@
 import {bootstrap, Component, View, Inject, NgZone} from 'angular2/core';
 import {Http} from 'angular2/http';
-import {Account} from './account';
+import {Account} from './account.js';
 import lodash from 'lodash';
 
 @Component({selector: 'my-app'})
 @View({
-  template: `
-    <h1>people</h1>
-    <ul class="people">
-      <li *ngFor="#account of accounts">
-        {{account.address}} has {{getBalance(account)}}
-      </li>
-    </ul>
-  `
+  templateUrl: 'app/home.tml'
 })
 export class AppComponent {
     static get parameters() {
@@ -21,7 +14,8 @@ export class AppComponent {
     constructor(http, zone) {
         var self = this;
         self.accounts=[];
-        http.get('https://testnet.blockexplorer.com/api/txs/?address=mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r')
+        var donationAddress = 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r';
+        http.get('https://testnet.blockexplorer.com/api/txs/?address=' + donationAddress)
             .subscribe(res => {
                 var txs = res.json();
                 var accounts = {};
@@ -31,7 +25,7 @@ export class AppComponent {
                     if (!account) {
                         account = accounts[sender] = new Account(sender);
                     }
-                    account.addBtcTx(tx, 'mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r');
+                    account.addBtcTx(tx, donationAddress);
                 })
                 self.accounts = lodash.values(accounts);
             });

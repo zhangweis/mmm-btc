@@ -59,6 +59,11 @@ export class Account {
         }, 0);
         return helping - requested;
     }
+    getHelpingAmount() {
+        return lodash.reduce(this.addTxs, function(total, tx){
+            return total+tx.amount;
+        }, 0);
+    }
 }
 Account.getSender = function (btcTx) {
     return btcTx.vin[0].addr;

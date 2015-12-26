@@ -1,33 +1,17 @@
 var gulp = require('gulp');
+var gulp_jspm = require('gulp-jspm');
 // var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
 
 var paths = {
-    scripts: ['app/*.js', 
-        'lib/**/*.js', 
-        'node_modules/lodash/index.js',
-        'node_modules/reflect-metadata/Reflect.js',
-        'node_modules/rxjs/observable/fromPromise.js',
-        'node_modules/rxjs/operator/toPromise.js',
-        'node_modules/rxjs/scheduler/FutureAction.js',
-        'node_modules/rxjs/scheduler/QueueAction.js',
-        'node_modules/rxjs/scheduler/QueueScheduler.js',
-        'node_modules/rxjs/scheduler/queue.js',
-        'node_modules/rxjs/subject/SubjectSubscription.js',
-        'node_modules/rxjs/symbol/rxSubscriber.js',
-        'node_modules/rxjs/util/SymbolShim.js',
-        'node_modules/rxjs/util/noop.js',
-        'node_modules/rxjs/util/root.js',
-        'node_modules/rxjs/util/throwError.js',
-        'node_modules/rxjs/util/tryOrOnError.js',
-        'node_modules/rxjs/Observable.js',
-        'node_modules/rxjs/Subject.js',
-        'node_modules/rxjs/Subscriber.js',
-        'node_modules/rxjs/Subscription.js',
-        'node_modules/systemjs/dist/system.src.js',
-        'node_modules/zone.js/dist/zone.js'
+    scripts: ['app/boot.js'
   ],
-  htmls: ['index.html']
+  lib: ['jspm_packages/system.js',
+  'config.js',
+  'jspm_packages/npm/reflect-metadata@0.1.2.js',
+  
+  ],
+  htmls: ['index.html', 'app/**/*.html', 'app/**/*.tml']
 };
 
 // Not all tasks need to use streams
@@ -40,16 +24,23 @@ gulp.task('clean', function() {
 gulp.task('scripts', ['clean'], function() {
   // Minify and copy all JavaScript (except vendor scripts)
   // with sourcemaps all the way down
-  return gulp.src(paths.scripts, {base:"."})
+  return gulp.src(paths.scripts)
+      .pipe(gulp_jspm())
     .pipe(gulp.dest('build'));
 });
+gulp.task('lib', ['clean'], function() {
+  // Minify and copy all JavaScript (except vendor scripts)
+  // with sourcemaps all the way down
+  return gulp.src(paths.lib, {base:'.'})
+    .pipe(gulp.dest('build'));
+});
+
 gulp.task('htmls', ['clean'], function() {
   // Minify and copy all JavaScript (except vendor scripts)
   // with sourcemaps all the way down
-  return gulp.src(paths.htmls)
+  return gulp.src(paths.htmls, {base:"."})
     .pipe(gulp.dest('build'));
 });
 
-
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['scripts', 'htmls']);
+gulp.task('default', ['scripts', 'lib', 'htmls']);

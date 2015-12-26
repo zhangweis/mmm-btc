@@ -29,9 +29,26 @@
   "devDependencies": {
     "del": "^2.2.0",
     "gulp": "^3.9.0",
+    "gulp-jspm": "^0.5.5",
     "jasmine-core": "^2.2.0",
     "karma": "^0.12.31",
     "karma-chrome-launcher": "^0.2.0",
-    "karma-jasmine": "^0.3.6"
+    "karma-jasmine": "^0.3.6",
+    "systemjs-builder": "^0.14.15"
+  },
+  "jspm": {
+    "dependencies": {
+      "angular2": "npm:angular2@^2.0.0-beta.0",
+      "lodash": "npm:lodash@^3.10.1",
+      "reflect-metadata": "npm:reflect-metadata@^0.1.2",
+      "zone.js": "npm:zone.js@^0.5.10"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4",
+      "traceur": "github:jmcriffey/bower-traceur@0.0.93",
+      "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.93"
+    }
   }
 }
