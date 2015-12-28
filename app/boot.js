@@ -4,7 +4,6 @@ import {AppComponent} from './app.component'
 import {HTTP_PROVIDERS} from 'angular2/http';
 import 'reflect-metadata';
 import 'zone.js';
-//todo remove it.
-enableProdMode();
+
 bootstrap(AppComponent, [HTTP_PROVIDERS]);
 

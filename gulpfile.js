@@ -11,7 +11,7 @@ var paths = {
   'jspm_packages/npm/reflect-metadata@0.1.2.js',
   
   ],
-  htmls: ['index.html', 'app/**/*.html', 'app/**/*.tml']
+  htmls: ['index.html', 'app/**/*.html', 'app/**/*.tml', 'whitepaper/**/*.html']
 };
 
 // Not all tasks need to use streams

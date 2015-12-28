@@ -1,0 +1,20 @@
+<h1>Donators:</h1>
+source: <a href='https://testnet.blockexplorer.com/address/mnph5g44T7uzYahGzx7s1eX1wYWqAjBK5r'>testnet.blockexplorer.com</a>
+
+<a href='whitepaper/index.html'>White paper</a>
+<table>
+    <thead>
+        <tr>
+            <th>Account</th>
+            <th>Donations</th>
+            <th>Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="#account of accounts">
+            <td>{{account.address}}</td>
+            <td>{{account.getHelpingAmount()}}</td>
+            <td>{{getBalance(account)}}</td>
+        </tr>
+    </tbody>
+</table>
